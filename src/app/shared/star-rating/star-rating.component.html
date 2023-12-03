@@ -1,0 +1,40 @@
+<ng-container>
+    <section>
+        <div class="reviewadded-message shadow-lg shadow-gray-800 rounded-md ring-green-900" *ngIf="addedReview">
+            <div>Thanks for rating us!</div>
+            <button *ngIf="(addReviewData$ |async) as review" (click)="editReview(review.id)">Edit Review</button>
+        </div>
+        <div class="star-widget" *ngIf="!addedReview">
+
+            <form #f="ngForm" (ngSubmit)="saveReview(f)" *ngIf="!editingReview"
+                class="shadow-lg shadow-gray-800 rounded-md">
+                <ngb-rating (click)="getRating()" [formControl]="ratingControl" [max]="5"></ngb-rating>
+                <div class="textarea">
+                    <textarea required ngModel #comment="ngModel" placeholder="Describe your service...."
+                        (change)="getValue(comment)" (ngModelChange)="updateComment()"
+                        [ngClass]="{error:comment.touched && comment.invalid,success:comment.valid,touched:!comment.touched}"
+                        name="comment" id="comment" cols="20" rows="5" [(ngModel)]="commentValue"></textarea>
+
+                </div>
+                <div *ngIf="!editingReview">
+                    <button [disabled]="comment.invalid" type="submit">Submit</button>
+                </div>
+            </form>
+            <form #f="ngForm" (ngSubmit)="saveUpdateReview(f)" *ngIf="(addReviewDetail$ |async)"
+                class="shadow-lg shadow-gray-800 rounded-md">
+                <ngb-rating (click)="getRating()" [formControl]="ratingControl" [max]="5"></ngb-rating>
+                <div class="textarea">
+                    <textarea required ngModel #comment="ngModel" (change)="getValue(comment)"
+                        (ngModelChange)="updateComment()" placeholder="Describe your service...."
+                        [ngClass]="{error:comment.touched && comment.invalid,success:comment.valid,touched:!comment.touched}"
+                        name="comment" id="comment" cols="30" rows="10" [(ngModel)]="commentValue"></textarea>
+
+                </div>
+                <div>
+                    <button [disabled]="comment.invalid" type="submit">Save
+                        Update</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</ng-container>
