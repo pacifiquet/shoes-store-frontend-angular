@@ -1,6 +1,6 @@
 # Shoes Store Frontend Angular
 
-## this project is my personal ecommerce for my shoes shop
+## This project is my personal ecommerce for my shoes shop
 
 
 ![image](https://drive.google.com/uc?export=view&id=1Sfx2pdEj0F19bMFL7I4nPzkPNCfIcTfq)
