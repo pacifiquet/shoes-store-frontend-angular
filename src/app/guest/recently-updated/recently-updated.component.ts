@@ -1,50 +1,59 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Subject, combineLatest, takeUntil} from 'rxjs';
 import {
-  ProductInterface,
-  RecentUpdateProductsResponse,
-} from '../store/product/types/ProductInterface';
-import {Store} from '@ngrx/store';
-import {
-  selectIsRecentLoaded,
-  selectRecentProducts,
-} from '../store/product/productReducer';
-import {recentUpdateProductsActions} from '../store/product/actions';
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { RecentUpdateProductsResponse } from '../store/product/types/ProductInterface';
+import { Store } from '@ngrx/store';
+import { ProductsService } from 'src/app/services/product/products.service';
 
 @Component({
   selector: 'app-recently-updated',
   templateUrl: './recently-updated.component.html',
   styleUrls: ['./recently-updated.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecentlyUpdatedComponent implements OnInit, OnDestroy {
   recentlyUpdated: RecentUpdateProductsResponse[] = [];
   currentPage = 1;
+  isRecentUpdateLoaded = false;
   isNext = false;
   isPrev = true;
   limit = 5;
   offset = 0;
-  products$ = combineLatest({
-    recentUpdatesProducts: this.store.select(selectRecentProducts),
-    isLoaded: this.store.select(selectIsRecentLoaded),
-  });
+  recentUpdatedProducts$: Observable<RecentUpdateProductsResponse[]> =
+    new Subject<RecentUpdateProductsResponse[]>();
+
   unsub$ = new Subject<void>();
 
-  @Input() recentProducts: ProductInterface[] = [];
-  @Input() message: string = '';
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private cdr: ChangeDetectorRef,
+    private productService: ProductsService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.recentUpdatedProducts$ = this.productService.getRecentUpdateProducts({
+      limit: this.limit,
+      offset: this.offset,
+    });
+    this.recentUpdatedProducts$.subscribe((data) => {
+      if (data.length > 0) {
+        this.isRecentUpdateLoaded = true;
+        this.cdr.markForCheck();
+      }
+      console.log(data);
+    });
+  }
 
   nextProductsByPage() {
     this.currentPage += 1;
     this.offset = 5;
     this.isNext = true;
     this.isPrev = false;
-    this.store.dispatch(
-      recentUpdateProductsActions.recentUpdateProducts({
-        request: {limit: this.limit, offset: this.offset},
-      })
-    );
   }
 
   prevProductsByPage() {
@@ -52,11 +61,6 @@ export class RecentlyUpdatedComponent implements OnInit, OnDestroy {
     this.offset = 0;
     this.isNext = false;
     this.isPrev = true;
-    this.store.dispatch(
-      recentUpdateProductsActions.recentUpdateProducts({
-        request: {limit: this.limit, offset: this.offset},
-      })
-    );
   }
 
   ngOnDestroy(): void {

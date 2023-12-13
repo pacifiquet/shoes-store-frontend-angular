@@ -1,4 +1,4 @@
-import {BackendErrorInterface} from 'src/app/types/backend.error.interface';
+import { BackendErrorInterface } from 'src/app/types/backend.error.interface';
 
 interface Pageable {
   pageNumber: number;
@@ -89,7 +89,7 @@ export interface RecentUpdateProductsResponse {
   id?: number;
   rating?: number;
   productName?: string;
-  url?: string;
+  productUrl?: string;
   price?: number;
 }
 

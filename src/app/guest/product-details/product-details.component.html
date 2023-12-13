@@ -28,10 +28,11 @@
                 </div>
                 <div>
                     <div class="user-info">
-                        <img [src]="product.user?.profile" alt="user">
+                        <img *ngIf="product.user?.profile" [src]="product.user?.profile" alt="user">
+                        <img *ngIf="product.user?.profile === null" src="../../../assets/no-profile.png" alt="user">
                         <div class="user-names">
                             <span>{{product.user?.firstName}}</span>
-                            <span>{{product.user?.lastName}}</span>
+                            <span> {{product.user?.lastName}}</span>
                         </div>
                     </div>
                 </div>
@@ -57,9 +58,8 @@
 
                                 <div class="rating-user">
                                     <div>
-                                        <img *ngIf="!review.reviewUserResponse?.profileImage"
-                                            src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg"
-                                            alt="profile" class="img-center">
+                                        <img *ngIf="review.reviewUserResponse?.profileImage === null"
+                                            src="../../../assets/no-profile.png" alt="profile" class="img-center">
                                         <img *ngIf="review.reviewUserResponse?.profileImage"
                                             [src]="review.reviewUserResponse?.profileImage"
                                             [alt]="review.reviewUserResponse?.firstName">

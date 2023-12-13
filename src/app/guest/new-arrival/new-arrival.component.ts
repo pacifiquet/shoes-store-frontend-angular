@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ProductsService } from 'src/app/services/product/products.service';
@@ -14,6 +19,7 @@ import {
   selectRecentProducts,
 } from '../store/product/productReducer';
 import { ProductInterface } from '../store/product/types/ProductInterface';
+import { RecentlyUpdatedComponent } from '../recently-updated/recently-updated.component';
 
 @Component({
   selector: 'app-new-arrival',
@@ -39,6 +45,7 @@ export class NewArrivalComponent implements OnInit {
   isKidsCategory: boolean = false;
   isCategoryFilter: boolean = false;
   unsub$ = new Subject<void>();
+
   productsList$ = combineLatest({
     recentUpdates: this.store.select(selectRecentProducts),
     newArrivals: this.store.select(selectNewArrivalList),

@@ -59,7 +59,11 @@
 
                     </div>
                     <div>
-                        <input [ngClass]="{valid:form.valid,invalid:form.invalid}" type="submit" value="Add Product">
+                        <input *ngIf="isAddingProduct" [ngClass]="{valid:form.valid,invalid:form.invalid}" type="submit"
+                            value="Add Product">
+                        <input *ngIf="isUpdatingProduct" [ngClass]="{valid:form.valid,invalid:form.invalid}"
+                            type="submit" value="Update Product">
+
                     </div>
                 </form>
             </div>
